@@ -24,7 +24,7 @@ def apply_clearance(cart)
   # REMEMBER: This method **should** update cart
   cart.each do |item| 
     if item[:clearance] === true 
-      item[:price] = (item[:price] * 0.8).round(2)
+      item[:price] = item[:price] * 0.8
     end 
   end 
 
@@ -43,16 +43,17 @@ def checkout(cart, coupons)
   #
   # BEFORE it begins the work of calculating the total (or else you might have
   # some irritated customers
-  binding.pry
-  consolidate_cart(cart)
-  apply_coupons(cart, coupons)
-  apply_clearance(cart)
-  cart.each do |item|
-    total += item[:price]
+  # binding.pry
+  # consolidate_cart(cart)
+  
+  discount_cart = apply_clearance(apply_coupons(consolidate_cart(cart), coupons))
+  discount_cart.each do |item|
+    # binding.pry
+    total += item[:price] * item[:count]
   end
 
   if total > 100
-   total -= (total * 0.1).round(2)
+   total = total * 0.9
   end
-  total
+  total.round(2)
 end
